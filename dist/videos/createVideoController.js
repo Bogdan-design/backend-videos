@@ -7,9 +7,8 @@ const inputValidation = (video) => {
     const errors = {
         errorsMessages: []
     };
-    // ...
-    if (!Array.isArray(video.availableResolution)
-        || video.availableResolution.find(p => !video_types_1.Resolutions[p])) {
+    if (!Array.isArray(video.availableResolutions)
+        || video.availableResolutions.find(p => !video_types_1.Resolutions[p])) {
         errors.errorsMessages.push({
             message: 'error!!!!', field: 'availableResolution'
         });
@@ -17,6 +16,7 @@ const inputValidation = (video) => {
     return errors;
 };
 const createVideoController = (req, res) => {
+    var _a;
     const errors = inputValidation(req.body);
     if (errors.errorsMessages.length) { // если есть ошибки - отправляем ошибки
         res
@@ -25,8 +25,8 @@ const createVideoController = (req, res) => {
         return;
     }
     // если всё ок - добавляем видео
-    const newVideo /*VideoDBType*/ = Object.assign(Object.assign({}, req.body), { id: Date.now() + Math.random() });
-    db_1.db.videos = [...db_1.db.videos, newVideo];
+    const newVideo = Object.assign(Object.assign({}, req.body), { id: Date.now() + Math.random() });
+    db_1.db.videos = [...((_a = db_1.db.videos) !== null && _a !== void 0 ? _a : []), newVideo];
     res
         .status(201)
         .json(newVideo);

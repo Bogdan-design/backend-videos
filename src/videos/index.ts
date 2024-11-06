@@ -1,19 +1,21 @@
 import {Request, Response, Router} from 'express'
 import {createVideoController} from './createVideoController'
-import {deleteVideoController} from './deleteVideoController'
-import {db} from "@/db/db";
+// import {deleteVideoController} from './deleteVideoController'
+import {db} from "../db/db";
+import {InputVideoType} from "../input-output-types/video-types";
+import {VideoDbType} from "../db/video-db-type";
 
 export const videosRouter = Router()
 
 export const videosController = {
-    getVideo: (req: Request<any>, res: Response<any>) => {
+    getVideo: (req: Request<void>, res: Response<VideoDbType[]>) => {
         const videos = db.videos
         res
             .status(200)
             .json(videos)
     },
-    createVideo: (req: Request<any>, res: Response<any>) => createVideoController(req, res),
-    findVideo: (req: Request<any>, res: Response<any>) => {
+    createVideo: (req: Request<InputVideoType>, res: Response<VideoDbType>) => createVideoController(req, res),
+    findVideo: (req: Request<any,any,{id:number}>, res: Response<VideoDbType>) => {
         if(db.videos){
 
         const videoFound = db.videos.find(v => req.body.id = v.id)
@@ -36,7 +38,7 @@ export const videosController = {
 videosRouter.get('/', videosController.getVideo)
 videosRouter.post('/', videosController.createVideo)
 videosRouter.get('/:id', videosController.findVideo)
-videosRouter.delete('/:id', deleteVideoController)
+// videosRouter.delete('/:id', deleteVideoController)
 // ...
 
 // не забудьте добавить роут в апп

@@ -2,13 +2,13 @@ import {Response, Request} from 'express'
 import {OutputErrorsType} from '../input-output-types/output-errors-type'
 import {db} from '../db/db'
 import {InputVideoType, Resolutions} from '../input-output-types/video-types'
-import {VideoDbType} from "@/db/video-db-type";
+import {VideoDbType} from "../db/video-db-type";
 
 const inputValidation = (video: InputVideoType) => {
     const errors: OutputErrorsType = { // объект для сбора ошибок
         errorsMessages: []
     }
-// ...
+
     if (!Array.isArray(video.availableResolutions)
         || video.availableResolutions.find(p => !Resolutions[p])
     ) {
@@ -19,7 +19,7 @@ const inputValidation = (video: InputVideoType) => {
     return errors
 }
 
-export const createVideoController = (req: Request<any, any, InputVideoType>, res: Response<any /*OutputVideoType*/ | OutputErrorsType>) => {
+export const createVideoController = (req: Request<InputVideoType>, res: Response<any /*OutputVideoType*/ | OutputErrorsType>) => {
     const errors = inputValidation(req.body)
     if (errors.errorsMessages.length) { // если есть ошибки - отправляем ошибки
         res
@@ -34,7 +34,7 @@ export const createVideoController = (req: Request<any, any, InputVideoType>, re
         id: Date.now() + Math.random(),
         // ...
     }
-    db.videos = [...db.videos, newVideo]
+    db.videos = [...(db.videos ?? []), newVideo]
 
     res
         .status(201)

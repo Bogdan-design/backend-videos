@@ -1,7 +1,7 @@
 export type OutputErrorsType = {
 	errorsMessages: ErrorsMessage[];
 }
-export type ErrorsMessage = {
+type ErrorsMessage = {
 	message: string;
 	field: string;
 }

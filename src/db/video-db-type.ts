@@ -1,4 +1,4 @@
-import {VideoTypes} from "@/input-output-types/video-types";
+import {VideoTypes} from "../input-output-types/video-types";
 
 export type VideoDbType =  {
     id: number;
