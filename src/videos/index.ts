@@ -50,8 +50,9 @@ export const videosController = {
         const newPublicationDate = req.body.publicationDate
 
         if (Array.isArray(db.videos) && videoId) {
+            const index = db.videos.findIndex(v => v.id === videoId)
             const videoFound = db.videos.find(v => videoId === v.id)
-            if (videoFound) {
+            if (videoFound && index) {
 
                 if(newTitle && newAuthor) {
 
@@ -68,7 +69,7 @@ export const videosController = {
                             : videoFound.availableResolutions,
                     }
 
-                    db.videos.splice(videoId, 1, updatedVideo)
+                    db.videos.splice(index, 1, updatedVideo)
                     res.status(201).json(updatedVideo)
 
                 } else{

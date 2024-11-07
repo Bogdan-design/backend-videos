@@ -36,6 +36,65 @@ exports.videosController = {
             }
         }
     },
+    updateVideo: (req, res) => {
+        const videoId = +req.params.id;
+        const newTitle = req.body.title;
+        const newAuthor = req.body.author;
+        const newAvailableResolution = req.body.availableResolutions;
+        const newCanBeDownloaded = req.body.canBeDownloaded;
+        const newMinAgeRestriction = req.body.minAgeRestriction;
+        const newPublicationDate = req.body.publicationDate;
+        if (Array.isArray(db_1.db.videos) && videoId) {
+            const index = db_1.db.videos.findIndex(v => v.id === videoId);
+            const videoFound = db_1.db.videos.find(v => videoId === v.id);
+            if (videoFound && index) {
+                if (newTitle && newAuthor) {
+                    const updatedVideo = {
+                        id: videoId,
+                        title: newTitle,
+                        author: newAuthor,
+                        canBeDownloaded: newCanBeDownloaded ? newCanBeDownloaded : videoFound.canBeDownloaded,
+                        minAgeRestriction: newMinAgeRestriction ? newMinAgeRestriction : videoFound.minAgeRestriction,
+                        createdAt: videoFound.createdAt,
+                        publicationDate: newPublicationDate ? newPublicationDate : videoFound.publicationDate,
+                        availableResolutions: newAvailableResolution ?
+                            [...newAvailableResolution]
+                            : videoFound.availableResolutions,
+                    };
+                    db_1.db.videos.splice(index, 1, updatedVideo);
+                    res.status(201).json(updatedVideo);
+                }
+                else {
+                    const error = {
+                        errorsMessages: [
+                            {
+                                message: 'You mees write title or author', field: 'title or author'
+                            }
+                        ]
+                    };
+                    res
+                        .status(400)
+                        .json(error);
+                    return;
+                }
+                res.status(204).json(videoFound);
+                return;
+            }
+            else {
+                const error = {
+                    errorsMessages: [
+                        {
+                            message: 'Video for passed id doesn`t exist', field: 'id'
+                        }
+                    ]
+                };
+                res
+                    .status(404)
+                    .json(error);
+                return;
+            }
+        }
+    },
     deleteVideo: (req, res) => {
         const videoId = +req.params.id;
         if (videoId && db_1.db.videos) {
@@ -66,5 +125,5 @@ exports.videosController = {
 exports.videosRouter.get('/', exports.videosController.getVideo);
 exports.videosRouter.post('/', exports.videosController.createVideo);
 exports.videosRouter.get('/:id', exports.videosController.findVideo);
+exports.videosRouter.put('/:id', exports.videosController.updateVideo);
 exports.videosRouter.delete('/:id', exports.videosController.deleteVideo);
-// ...
