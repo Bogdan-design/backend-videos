@@ -1,7 +1,7 @@
 import {Response, Request} from 'express'
 import {OutputErrorsType} from '../input-output-types/output-errors-type'
 import {db} from '../db/db'
-import {InputVideoType, Resolutions} from '../input-output-types/video-types'
+import {InputVideoType, Resolutions} from '../input-output-types/resolution-video-types'
 import {VideoDbType} from "../db/video-db-type";
 
 const inputValidation = (video: InputVideoType) => {
@@ -19,7 +19,7 @@ const inputValidation = (video: InputVideoType) => {
     return errors
 }
 
-export const createVideoController = (req: Request<InputVideoType>, res: Response<any /*OutputVideoType*/ | OutputErrorsType>) => {
+export const createVideoController = (req: Request<any,any,InputVideoType>, res: Response<any /*OutputVideoType*/ | OutputErrorsType>) => {
     const errors = inputValidation(req.body)
     if (errors.errorsMessages.length) { // если есть ошибки - отправляем ошибки
         res
@@ -27,16 +27,21 @@ export const createVideoController = (req: Request<InputVideoType>, res: Respons
             .json(errors)
         return
     }
+    if(req.body.author || req.body.author.trim().length<20  || req.body.title || req.body.title.trim().length<40  || req.body.availableResolutions){
+        const newVideo: VideoDbType = {
+            ...req.body,
+            id: Date.now() + Math.random(),
+            canBeDownloaded: true,
+            minAgeRestriction: null,
+            createdAt: new Date().toISOString(),
+            publicationDate: new Date().toISOString()
+        }
+        db.videos = [...(db.videos ?? []), newVideo]
 
-    // если всё ок - добавляем видео
-    const newVideo: VideoDbType = {
-        ...req.body,
-        id: Date.now() + Math.random(),
-        // ...
+        res
+            .status(201)
+            .json(newVideo)
+        return
     }
-    db.videos = [...(db.videos ?? []), newVideo]
 
-    res
-        .status(201)
-        .json(newVideo)
 }

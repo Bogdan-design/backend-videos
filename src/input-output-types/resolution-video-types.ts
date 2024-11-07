@@ -1,9 +1,9 @@
-export type VideoTypes =  "P144" | "P240" | "P360"| "P480"| "P720"| "P1080"| "P1440"| "P2160"
+export type ResolutionVideoTypes =  "P144" | "P240" | "P360"| "P480"| "P720"| "P1080"| "P1440"| "P2160"
 
 export type InputVideoType = {
 	title: string;
 	author: string;
-	availableResolutions: VideoTypes[];
+	availableResolutions: ResolutionVideoTypes[];
 }
 
 export enum Resolutions {

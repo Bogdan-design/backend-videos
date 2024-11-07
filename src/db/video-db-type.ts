@@ -1,4 +1,4 @@
-import {VideoTypes} from "../input-output-types/video-types";
+import {ResolutionVideoTypes} from "../input-output-types/resolution-video-types";
 
 export type VideoDbType =  {
     id: number;
@@ -8,5 +8,5 @@ export type VideoDbType =  {
     minAgeRestriction?: any;
     createdAt: string;
     publicationDate: string;
-    availableResolutions: VideoTypes[];
+    availableResolutions: ResolutionVideoTypes[];
 }

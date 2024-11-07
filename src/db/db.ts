@@ -1,4 +1,4 @@
-import {VideoDbType} from "@/db/video-db-type";
+import {VideoDbType} from "../db/video-db-type";
 
 export type DBType = { // типизация базы данных (что мы будем в ней хранить)
     videos: VideoDbType[] // VideoDBType[]
